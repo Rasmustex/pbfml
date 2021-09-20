@@ -1,7 +1,8 @@
 #ifndef BF_INTERPRETER_H
 #define BF_INTERPRETER_H
+#include "cell.h"
 
-unsigned long* parsebf( char* program, unsigned int tapesize );
+cell* parsebf( char* program, unsigned int tapesize );
 char* readFile( char* filename ); 
 
 #endif

@@ -18,7 +18,7 @@ release: $(BIN)
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-$(OBJ)/%.o: $(SRC)/%.c $(INCLUDE)/cell.h | dirsetup
+$(OBJ)/%.o: $(SRC)/%.c $(INCLUDE)/*.h | dirsetup
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean: 

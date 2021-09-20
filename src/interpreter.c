@@ -2,16 +2,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "interpreter.h"
+#include "../include/interpreter.h"
+#include "../include/cell.h"
 
-unsigned long* parsebf( char* program, unsigned int tapesize ) {
+cell* parsebf( char* program, unsigned int tapesize ) {
 	// create tape and init to 0.
-	unsigned long* tape = (unsigned long*)malloc( tapesize * sizeof(unsigned long) );
+	cell* tape = (cell*)malloc( tapesize * sizeof(cell) );
 	for( unsigned int i = 0; i < tapesize; i++ ) {
-		*(tape + i) = 0; 
+		(tape + i * sizeof(cell))->lower=0; 
+		(tape + i * sizeof(cell))->upper=0; 
 	}
 
-	unsigned long* ptr = tape; 
+	cell* ptr = tape; 
 	int programlength = strlen( program );
 	int neededopposites;
 	char currchar;
@@ -21,10 +23,10 @@ unsigned long* parsebf( char* program, unsigned int tapesize ) {
 		
 		switch( currchar ) {
 			case '+':
-				++*ptr;
+				increment_cell(ptr);
 				break;
 			case '-':
-				--*ptr;
+				decrement_cell(ptr);
 				break;
 			case '>':
 				ptr < tape + tapesize -1 ? (ptr++) : (ptr = tape);
@@ -33,10 +35,10 @@ unsigned long* parsebf( char* program, unsigned int tapesize ) {
 				ptr > tape ? (ptr--) : (ptr = tape + tapesize - 1);
 				break;
 			case '[':
-				if( !(*ptr) ) {
+				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
-						if( i < tapesize ) {
+						if( i < programlength ) {
 							currchar = *(program + (++i));
 						}
 						else {
@@ -52,11 +54,13 @@ unsigned long* parsebf( char* program, unsigned int tapesize ) {
 				}
 				break;
 			case ']':
-				if( *ptr ) {
+				// printf("reached right paren\n");
+				if( ptr->lower || ptr->upper ) {
 					neededopposites = 1;
 					while ( neededopposites > 0 ) {
 						if( i > 0 ) {
 							currchar = *(program + (--i));
+							// printf("%c", currchar);
 						}
 						else {
 							free( tape ); 
@@ -65,13 +69,13 @@ unsigned long* parsebf( char* program, unsigned int tapesize ) {
 						}
 						if( currchar == ']' )
 							neededopposites++;
-						else if( currchar == '[' )
+						else if( currchar == '[' ) 
 							neededopposites--;
 					}
 				}
 				break;
 			case '.':
-				printf("%lu", *ptr);
+				print_cell( ptr );
 			default: 
 				break;
 		}

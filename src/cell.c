@@ -25,7 +25,7 @@ void increment_cell( cell* c ) {
 
 void decrement_cell( cell* c ) {
     if( c->lower > 0 ) {
-        c->lower++;
+        c->lower--;
     } else if( c->upper ) {
         c->upper--;
         c->lower = __UINT32_MAX__;
