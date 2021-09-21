@@ -8,13 +8,11 @@
  * TODO: Repetition of operations in program string.
  * Maybe expand string in the beginning? Would probably be safest
  */
-long extract_long ( int start, int offset, char* program ) {
-	// printf("%d\n %s\n", offset, program);
-	char* selection = malloc((offset + 1) * sizeof(char));
-	memcpy(selection, &program[start], offset);
+unsigned long extract_long ( int start, int offset, char* program ) {
+	char* selection = malloc((offset + 1) * sizeof(char)); // allocate a string with size of the int
+	memcpy(selection, &program[start], offset); // copy program at int into string
 	*(selection + offset) = '\0';
-	// printf("%s\n", selection);
-	long extracted = atol(selection);
+	unsigned long extracted = (unsigned long)atol(selection); // convert to long 
 	free(selection);
 	return extracted;
 }
@@ -23,74 +21,72 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 	// create tape and init to 0.
 	cell* tape = (cell*)malloc( tapesize * sizeof(cell) );
 	for( unsigned int i = 0; i < tapesize; i++ ) {
-		(tape + i * sizeof(cell))->lower=0; 
-		(tape + i * sizeof(cell))->upper=0; 
+		(tape + i)->lower=0; 
+		(tape + i)->upper=0; 
 	}
 
 	int programlength = strlen( program );
-	int offset;
-	int endfound;
-	int numberindex = 0;
-	int maxindex;
-	long numbers[programlength][2];
 	char currchar;
 
-	// expand numbers in input program string
+	/* 
+	 * Iterate through program, and add each character of the program to an "extended" program
+	 * When a number is found, we get the entire number by going with an offset until there are no more numbers in the sequence
+	 * Data of the position is given to extract_long 
+	 * We use the extracted long to paste the previous characer n times where n is the extracted number
+	 * 
+	 * Each time we add a new character, we always realloc for the character first
+	 * When we get a repetition due to an extracted long, the expanded program reallocs n bytes of extra memory
+	 * We keep track of the expanded program length with a variable called exlen
+	 * We can then place single characters at exlen - 1
+	 * For pastes of multiple characters, we keep track of a "prev_exlen" sort of variable so we know where to start pasting 
+	 */
+	char* extprog = (char*)malloc( 1 * sizeof( char ) );
+	int exlen = 0; 
+	int prev_exlen;
+	int offset;
+	int num_ended;
+	unsigned long num;
+	char prevchar;
+
 	for( int i = 0; i < programlength; i++ ) {
 		currchar = *(program + i);
 		if( currchar >= '0' && currchar <= '9' ) {
-			endfound = 0;
+			printf("found a number\n");
 			offset = 0;
-			while( !endfound ) {
-				(i + offset < programlength) ? (++offset) : (endfound = 1);
-				currchar = *(program + i + offset);
-				if( currchar < '0' || currchar > '9')
-					endfound = 1;
+			num_ended = 0;
+			prevchar = *(program + i - 1);
+			while( !num_ended ) {
+				currchar = *(program + i + (++offset));
+				if( currchar < '0' || currchar > '9' ) {
+					num_ended = 1;
+					num = extract_long( i, offset, program );
+					printf("the number is: %lu\n", num);
+					exlen += num - 1;
+					extprog = realloc( extprog, exlen );
+					for( int j = 0; j < exlen - prev_exlen; j++ ) {
+						*(extprog + prev_exlen + j) = prevchar;
+					}
+				}
 			}
-			numbers[numberindex][0] = i - 1;
-			numbers[numberindex][1] = extract_long( i, offset, program );
-			i+=offset - 1;
+			i += offset - 1;
+		} else {
+			exlen++;
+			extprog = realloc( extprog, exlen );
+			*(extprog + exlen - 1) = currchar;
 		}
+		prev_exlen = exlen;
 	}
-	maxindex = numberindex;
-	// now we want to add in all the repetitions we need. We can do this by going from offset 
-	// to offset using numbers[] and pasting the amount of operators we need
 
-	int expsize = 0;
-	printf("%lu\n", numbers[0][0]);
-	char* expandedprogram = (char*)malloc( numbers[0][0] * sizeof( char ) );
-	memcpy( expandedprogram, &program[0], numbers[0][0]);
-	long prevp = 0; 
-	long preve = 0;
-
-	for( numberindex = 0; numberindex <= maxindex; numberindex++ ) {
-		// printf("%lu\n", numbers[numberindex][0]);
-		expsize += numbers[numberindex][0] + numbers[numberindex][1];
-		expandedprogram = (char*)realloc( expandedprogram, expsize );
-
-		memcpy( &expandedprogram[preve], &program[prevp], numbers[numberindex][0] - prevp );
-		// doesn't get in here
-		for( int i = 0; i < numbers[numberindex][1] - 1; i++ ) {
-			currchar = *(program + numbers[numberindex][0]);
-			strcat(expandedprogram, &currchar);
-		}
-		prevp = numbers[numberindex][0];
-		preve = numbers[numberindex][0] + numbers[numberindex][1];
-	}
-	printf("%s\n", expandedprogram);
-
-	expsize += programlength - numbers[maxindex][0] + 1;
-	expandedprogram = (char*)realloc( expandedprogram, expsize );
-	strcat(expandedprogram, &program[numbers[maxindex][0]]);
-	expandedprogram[expsize] = '\0';
-	printf("%s\n", expandedprogram);
-
+	exlen++;
+	extprog = realloc( extprog, exlen );
+	*(extprog + exlen - 1) = '\0';
+	printf("%s\n", extprog);
 
 	cell* ptr = tape; 
 	int neededopposites;
 
-	for( int i = 0; i < expsize; i++ ) {
-		currchar = *(expandedprogram + i);
+	for( int i = 0; i < programlength; i++ ) {
+		currchar = *(program + i);
 		
 		switch( currchar ) {
 			case '+':
@@ -109,8 +105,8 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
-						if( i < expsize ) {
-							currchar = *(expandedprogram + (++i));
+						if( i < programlength ) {
+							currchar = *(program + (++i));
 						}
 						else {
 							free( tape );
@@ -129,7 +125,7 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 					neededopposites = 1;
 					while ( neededopposites > 0 ) {
 						if( i > 0 ) {
-							currchar = *(expandedprogram + (--i));
+							currchar = *(program + (--i));
 						}
 						else {
 							free( tape ); 
@@ -149,6 +145,7 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 				break;
 		}
 	}
+	free( extprog );
 	
 	return tape;
 }
