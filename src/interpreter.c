@@ -28,18 +28,6 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 	int programlength = strlen( program );
 	char currchar;
 
-	/* 
-	 * Iterate through program, and add each character of the program to an "extended" program
-	 * When a number is found, we get the entire number by going with an offset until there are no more numbers in the sequence
-	 * Data of the position is given to extract_long 
-	 * We use the extracted long to paste the previous characer n times where n is the extracted number
-	 * 
-	 * Each time we add a new character, we always realloc for the character first
-	 * When we get a repetition due to an extracted long, the expanded program reallocs n bytes of extra memory
-	 * We keep track of the expanded program length with a variable called exlen
-	 * We can then place single characters at exlen - 1
-	 * For pastes of multiple characters, we keep track of a "prev_exlen" sort of variable so we know where to start pasting 
-	 */
 	char* extprog = (char*)malloc( 1 * sizeof( char ) );
 	int exlen = 0; 
 	int prev_exlen;
