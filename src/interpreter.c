@@ -17,6 +17,7 @@ unsigned long extract_long ( int start, int offset, char* program ) {
 	return extracted;
 }
 
+// TODO: Filelength for EOF checking 
 cell* parse_bf( char* program, unsigned int tapesize ) {
 	// create tape and init to 0.
 	cell* tape = (cell*)malloc( tapesize * sizeof(cell) );

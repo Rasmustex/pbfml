@@ -7,7 +7,6 @@ extern "C" {
     
     typedef struct
     {
-        /* data */
         unsigned int lower;
         unsigned char upper;
     } cell;
