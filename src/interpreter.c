@@ -4,9 +4,9 @@
 #include <string.h>
 #include "../include/interpreter.h"
 
-/*
- * TODO: Repetition of operations in program string.
- * Maybe expand string in the beginning? Would probably be safest
+/* 
+ * Takes the starting point of a number in a string, the offset to the end of the number (starting at 1), and the string.
+ * Returns the number as an unsigned long
  */
 unsigned long extract_long ( int start, int offset, char* program ) {
 	char* selection = malloc((offset + 1) * sizeof(char)); // allocate a string with size of the int
@@ -43,50 +43,48 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 	char* extprog = (char*)malloc( 1 * sizeof( char ) );
 	int exlen = 0; 
 	int prev_exlen;
-	int offset;
-	int num_ended;
-	unsigned long num;
-	char prevchar;
+	int offset; // offset from beginning of found number to end
+	int num_ended; 
+	unsigned long num; // found number 
+	char prevchar; // character before the found number that needs to be repeated
 
 	for( int i = 0; i < programlength; i++ ) {
-		currchar = *(program + i);
-		if( currchar >= '0' && currchar <= '9' ) {
-			printf("found a number\n");
+		currchar = *(program + i); // iterate through program
+		if( currchar >= '0' && currchar <= '9' ) { // character is a number
 			offset = 0;
 			num_ended = 0;
 			prevchar = *(program + i - 1);
 			while( !num_ended ) {
-				currchar = *(program + i + (++offset));
+				currchar = *(program + i + (++offset)); // check whether next character is a number 
 				if( currchar < '0' || currchar > '9' ) {
-					num_ended = 1;
-					num = extract_long( i, offset, program );
-					printf("the number is: %lu\n", num);
-					exlen += num - 1;
-					extprog = realloc( extprog, exlen );
+					num_ended = 1; // The next character is not a number
+					num = extract_long( i, offset, program ); // extract the found number
+					exlen += num - 1; // length of the extended program is extended by the number of repetitions
+					extprog = realloc( extprog, exlen ); // reallocate enough memory for repetition
 					for( int j = 0; j < exlen - prev_exlen; j++ ) {
-						*(extprog + prev_exlen + j) = prevchar;
+						*(extprog + prev_exlen + j) = prevchar; // place prevchar in the newly reallocated memory
 					}
 				}
 			}
-			i += offset - 1;
+			i += offset - 1; // make i skip past the rest of the number so a number of length n doesn't register as n different numbers.
 		} else {
-			exlen++;
-			extprog = realloc( extprog, exlen );
-			*(extprog + exlen - 1) = currchar;
+			exlen++; 
+			extprog = realloc( extprog, exlen ); // expand exprog by one character
+			*(extprog + exlen - 1) = currchar; // the new character slot is filled with the current one in program
 		}
 		prev_exlen = exlen;
 	}
 
+	// make space for a null-character
 	exlen++;
-	extprog = realloc( extprog, exlen );
-	*(extprog + exlen - 1) = '\0';
-	printf("%s\n", extprog);
+	extprog = realloc( extprog, exlen ); 
+	*(extprog + exlen - 1) = '\0'; 
 
 	cell* ptr = tape; 
 	int neededopposites;
 
-	for( int i = 0; i < programlength; i++ ) {
-		currchar = *(program + i);
+	for( int i = 0; i < exlen; i++ ) {
+		currchar = *(extprog + i);
 		
 		switch( currchar ) {
 			case '+':
@@ -105,11 +103,12 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
-						if( i < programlength ) {
-							currchar = *(program + (++i));
+						if( i < exlen ) {
+							currchar = *(extprog + (++i));
 						}
 						else {
 							free( tape );
+							free( extprog );
 							printf("bracket error");
 							exit(1);
 						}
@@ -125,10 +124,11 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 					neededopposites = 1;
 					while ( neededopposites > 0 ) {
 						if( i > 0 ) {
-							currchar = *(program + (--i));
+							currchar = *(extprog + (--i));
 						}
 						else {
 							free( tape ); 
+							free( extprog );
 							printf("bracket error");
 							exit(1);
 						}
