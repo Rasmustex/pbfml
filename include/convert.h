@@ -16,7 +16,7 @@ extern "C" {
     "</body>"
     "</html>";
 
-    // we can bitwise OR these with the upper byte. Should be endianness-agnostic?
+    // we can bitwise AND these with the upper byte. Should be endianness-agnostic?
     typedef enum {
         TEXT_BOLD = 8,
         TEXT_ITALICS = 4,
