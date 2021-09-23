@@ -16,6 +16,16 @@ extern "C" {
     "</body>"
     "</html>";
 
+    // we can bitwise OR these with the upper byte. Should be endianness-agnostic?
+    typedef enum {
+        TEXT_BOLD = 8,
+        TEXT_ITALICS = 4,
+        TEXT_UNDERLINE = 2
+    } Attrib;
+    // as for text size, we will have to get those bits into their own variable and just convert to decimal to insert into our HTML file
+
+    // colour should be VERY doable 
+
     /* 
      * Need to make functions that check bit values of cell and can return a state
      * Needs to compare to state of previous char 

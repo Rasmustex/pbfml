@@ -18,15 +18,14 @@ unsigned long extract_long ( int start, int offset, char* program ) {
 }
 
 // TODO: Filelength for EOF checking 
-cell* parse_bf( char* program, unsigned int tapesize ) {
+cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
-	cell* tape = (cell*)malloc( tapesize * sizeof(cell) );
-	for( unsigned int i = 0; i < tapesize; i++ ) {
+	cell* tape = (cell*)malloc( f->textlen * sizeof(cell) );
+	for( unsigned int i = 0; i < f->textlen; i++ ) {
 		(tape + i)->lower=0; 
 		(tape + i)->upper=0; 
 	}
 
-	int programlength = strlen( program );
 	char currchar;
 
 	char* extprog = (char*)malloc( 1 * sizeof( char ) );
@@ -37,17 +36,17 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 	unsigned long num; // found number 
 	char prevchar; // character before the found number that needs to be repeated
 
-	for( int i = 0; i < programlength; i++ ) {
-		currchar = *(program + i); // iterate through program
+	for( int i = 0; i < f->proglen; i++ ) {
+		currchar = *(f->program + i); // iterate through program
 		if( currchar >= '0' && currchar <= '9' ) { // character is a number
 			offset = 0;
 			num_ended = 0;
-			prevchar = *(program + i - 1);
+			prevchar = *(f->program + i - 1);
 			while( !num_ended ) {
-				currchar = *(program + i + (++offset)); // check whether next character is a number 
+				currchar = *(f->program + i + (++offset)); // check whether next character is a number 
 				if( currchar < '0' || currchar > '9' ) {
 					num_ended = 1; // The next character is not a number
-					num = extract_long( i, offset, program ); // extract the found number
+					num = extract_long( i, offset, f->program ); // extract the found number
 					exlen += num - 1; // length of the extended program is extended by the number of repetitions
 					extprog = realloc( extprog, exlen ); // reallocate enough memory for repetition
 					for( int j = 0; j < exlen - prev_exlen; j++ ) {
@@ -83,10 +82,10 @@ cell* parse_bf( char* program, unsigned int tapesize ) {
 				decrement_cell(ptr);
 				break;
 			case '>':
-				ptr < tape + tapesize -1 ? (ptr++) : (ptr = tape);
+				ptr < tape + f->textlen - 1 ? (ptr++) : (ptr = tape);
 				break;
 			case '<':
-				ptr > tape ? (ptr--) : (ptr = tape + tapesize - 1);
+				ptr > tape ? (ptr--) : (ptr = tape + f->textlen - 1);
 				break;
 			case '[':
 				if( !(ptr->lower || ptr->upper) ) {

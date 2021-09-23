@@ -5,8 +5,10 @@ extern "C" {
 #endif 
 
     #include "cell.h"
+    #include "file.h"
 
-    cell* parse_bf( char* program, unsigned int tapesize );
+    cell* run_bf( bfmlFile* f );
+
     char* readFile( char* filename ); 
 
 #ifdef __cplusplus
