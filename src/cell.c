@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "../include/cell.h"
 
 
@@ -35,4 +36,11 @@ void decrement_cell( cell* c ) {
     }
 
     return;
+}
+
+bool compare_cells( cell* c1, cell* c2 ) {
+    if( c1->upper == c2->upper && c1->lower == c2->lower )
+        return true;
+    else
+        return false;
 }

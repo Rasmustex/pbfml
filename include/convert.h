@@ -1,20 +1,19 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef CONVERT_H
+#define CONVERT_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
     
-    char htmlTemplate[] = 
-    "<!DOCTYPE html>"
-    "<html lang=\"en\">"
-    "<head>"
-    "\t<title>testing</title>"
-    "\t<meta charset=\"uft-8\">"
-    "</head>"
-    "<body>"
-    "</body>"
-    "</html>";
+    #include "cell.h"
+    #include "file.h"
+
+    const char* bold = "<b>";
+    const char* boldend = "</b>";
+
+    const char* html = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>testing</title>\n\t<meta charset=\"uft-8\">\n</head>\n<body>\n<p>\n";
+    
+    const char* htmend = "</p>\n</body>\n</html>\n";
 
     // we can bitwise AND these with the upper byte. Should be endianness-agnostic?
     typedef enum {
@@ -22,6 +21,8 @@ extern "C" {
         TEXT_ITALICS = 4,
         TEXT_UNDERLINE = 2
     } Attrib;
+
+    void to_html( cell* c, bfmlFile* f, char* fname );
     // as for text size, we will have to get those bits into their own variable and just convert to decimal to insert into our HTML file
 
     // colour should be VERY doable 

@@ -6,6 +6,7 @@ extern "C" {
 
     #include "cell.h"
     #include "file.h"
+    #include "convert.h"
 
     cell* run_bf( bfmlFile* f );
 
