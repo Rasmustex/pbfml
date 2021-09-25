@@ -45,10 +45,14 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             fprintf( ht, "</u>");
 
         // print the character or line break
-        if( *(f->text + i) != '\n' )
-            fprintf( ht, "%c", *(f->text + i) );
-        else
+        if( *(f->text + i) == '\n' )
             fprintf( ht, "<br>\n" );
+        else if( *(f->text + i ) == '<' )
+            fprintf( ht, "&lt;" );
+        else if( *(f->text + i) == '>' )
+            fprintf( ht, "&gt;");
+        else
+            fprintf( ht, "%c", *(f->text + i) );
         prevcell = currcell;
     }
     fprintf( ht, "</p>\n</body>\n</html>\n" );
