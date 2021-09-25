@@ -17,6 +17,8 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
     for( int i = 0; i < f->textlen; i++ ) {
         currcell = c + i;
 
+        // go through each cell and print required tags - keep track of whether the previous cell had the same tags
+        // so we can avoid wasting file space
         /*
          * checking state
          */
@@ -47,8 +49,6 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             fprintf( ht, "%c", *(f->text + i) );
         else
             fprintf( ht, "<br>\n" );
-        // go through each cell and print required tags - keep track of whether the previous cell had the same tags
-        // so we can avoid wasting file space
         prevcell = currcell;
     }
     fprintf( ht, "</p>\n</body>\n</html>\n" );
