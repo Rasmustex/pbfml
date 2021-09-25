@@ -13,7 +13,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
     cell* prevcell = &tempcell;
     FILE* ht = fopen( fname, "w+" );
 
-    fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"uft-8\">\n</head>\n<body>\n<p>\n", fname );
+    fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"utf-8\">\n</head>\n<body>\n<p>\n", fname );
     for( int i = 0; i < f->textlen; i++ ) {
         currcell = c + i;
 
