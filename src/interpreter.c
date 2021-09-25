@@ -36,9 +36,12 @@ cell* run_bf( bfmlFile* f ) {
 	unsigned long num; // found number 
 	char prevchar; // character before the found number that needs to be repeated
 
+
+	//IMPORTANT TODO
+	// instead of this, let's check repetitions at runtime, doing this same search, but just using a for loop for the repetitions
 	for( int i = 0; i < f->proglen; i++ ) {
 		currchar = *(f->program + i); // iterate through program
-		if( currchar >= '0' && currchar <= '9' ) { // character is a number
+		if( currchar >= '0' && currchar <= '9' && i ) { // character is a number
 			offset = 0;
 			num_ended = 0;
 			prevchar = *(f->program + i - 1);
@@ -49,6 +52,10 @@ cell* run_bf( bfmlFile* f ) {
 					num = extract_long( i, offset, f->program ); // extract the found number
 					exlen += num - 1; // length of the extended program is extended by the number of repetitions
 					extprog = realloc( extprog, exlen ); // reallocate enough memory for repetition
+					if( extprog == NULL ) {
+						printf("error reallocating\n");
+						exit(1);
+					}
 					for( int j = 0; j < exlen - prev_exlen; j++ ) {
 						*(extprog + prev_exlen + j) = prevchar; // place prevchar in the newly reallocated memory
 					}
@@ -71,8 +78,8 @@ cell* run_bf( bfmlFile* f ) {
 	cell* ptr = tape; 
 	int neededopposites;
 
-	for( int i = 0; i < exlen; i++ ) {
-		currchar = *(extprog + i);
+	for( int i = 0; i < f->proglen; i++ ) {
+		currchar = *(f->program + i);
 		
 		switch( currchar ) {
 			case '+':
@@ -91,8 +98,8 @@ cell* run_bf( bfmlFile* f ) {
 				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
-						if( i < exlen ) {
-							currchar = *(extprog + (++i));
+						if( i < f->proglen ) {
+							currchar = *(f->program + (++i));
 						}
 						else {
 							free( tape );
@@ -112,7 +119,7 @@ cell* run_bf( bfmlFile* f ) {
 					neededopposites = 1;
 					while ( neededopposites > 0 ) {
 						if( i > 0 ) {
-							currchar = *(extprog + (--i));
+							currchar = *(f->program + (--i));
 						}
 						else {
 							free( tape ); 
