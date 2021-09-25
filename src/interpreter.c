@@ -128,7 +128,12 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case '.':
-				print_cell( ptr );
+				ptr->upper = 0;
+				if( ptr - tape <= f->textlen ) {
+					ptr->lower = 0;
+				} else {
+					ptr->lower = 1;
+				}
 			default: 
 				break;
 		}
