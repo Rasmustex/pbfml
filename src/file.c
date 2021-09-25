@@ -26,8 +26,8 @@ bfmlFile* read_file( char* filename ) {
     file->program[charcounter] = '\0';
 
     fseek( f, 0, SEEK_END );
-    unsigned long textsize = ftell(f) - charcounter;
-    fseek(f, charcounter, SEEK_SET);
+    unsigned long textsize = ftell(f) - charcounter - 1;
+    fseek(f, charcounter + 1, SEEK_SET);
     file->text = (char*)malloc(textsize + 1);
     for( int i = 0; i < textsize; i++ ) {
         file->text[i] = fgetc( f );

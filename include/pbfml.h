@@ -16,7 +16,7 @@ extern "C" {
     void print_cell( cell* c );
     void increment_cell( cell* c );
     void decrement_cell( cell* c );
-    // long comparecells( cell* c1, cell* c2 ); implement one that returns diff. Currently ittelevant 
+    // long comparecells( cell* c1, cell* c2 ); implement one that returns diff. Currently irrelevant 
     bool compare_cells( cell* c1, cell* c2 );
 
     // file reading
@@ -35,12 +35,10 @@ extern "C" {
 
     // html conversion functions and structures
 
-    // we can bitwise AND these with the upper byte. Should be endianness-agnostic?
-    typedef enum {
-        TEXT_BOLD = 8,
-        TEXT_ITALICS = 4,
-        TEXT_UNDERLINE = 2
-    } Attrib;
+    // for bitwise and with the upper bytes of the char 
+    #define TEXT_BOLD 8
+    #define TEXT_ITALICS 4
+    #define TEXT_UNDERLINE 2
 
     void to_html( cell* c, bfmlFile* f, char* fname );
     // as for text size, we will have to get those bits into their own variable and just convert to decimal to insert into our HTML file
