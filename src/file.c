@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "../include/file.h"
+#include "../include/pbfml.h"
 
 bfmlFile* read_file( char* filename ) {
     bfmlFile* file = (bfmlFile*)malloc(sizeof(bfmlFile));

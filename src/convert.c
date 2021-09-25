@@ -1,9 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "../include/interpreter.h"
+#include "../include/pbfml.h"
 
 void to_html ( cell* c, bfmlFile* f, char* fname ) {
+
+    const char* bold = "<b>";
+    const char* boldend = "</b>";
+
+    const char* html = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>testing</title>\n\t<meta charset=\"uft-8\">\n</head>\n<body>\n<p>\n";
+    
+    const char* htmend = "</p>\n</body>\n</html>\n";
+
     cell tempcell = {.lower = 0,
                     .upper = 0};
     cell* currcell;
@@ -12,27 +20,9 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
     fprintf( ht, "%s", html );
     for( int i = 0; i < f->textlen; i++ ) {
-        currcell = (c + i);
-        //check if state is the same pls 
-        if( !compare_cells( currcell, prevcell ) ) {
-            // don't change state 
-        } else {
-            if( currcell->upper & TEXT_BOLD && !(prevcell->upper & TEXT_BOLD) );
-                // fprintf(ht, "%s", bold);
-            else if (prevcell->upper & TEXT_BOLD);
-                // fprintf(ht, "%s", boldend);
-        }
-        // if((c + i)->upper & TEXT_BOLD) {
-        //     // do bold text
-        // }
-        // if((c + i)->upper & TEXT_ITALICS) {
-        //     // do italics
-        // }
-        // if((c + i)->upper & TEXT_UNDERLINE) {
-        //     // do underline
-        // }
-        prevcell = currcell;
+        // go through each cell and print required tags - keep track of whether the previous cell had the same tags
+        // so we can avoid wasting file space
     }
-    // fprintf( ht, "%s", htmend );
+    fprintf( ht, "%s", htmend );
     fclose( ht );
 }

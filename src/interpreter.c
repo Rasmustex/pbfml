@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "../include/interpreter.h"
+#include "../include/pbfml.h"
 
 /* 
  * Takes the starting point of a number in a string, the offset to the end of the number (starting at 1), and the string.

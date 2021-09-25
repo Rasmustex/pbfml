@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/interpreter.h"
+#include "../include/pbfml.h"
 
 int main( int argc, char** argv ) {
     bfmlFile* f = read_file( "test.bfml" );

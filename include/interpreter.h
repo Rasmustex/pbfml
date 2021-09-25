@@ -10,8 +10,6 @@ extern "C" {
 
     cell* run_bf( bfmlFile* f );
 
-    char* readFile( char* filename ); 
-
 #ifdef __cplusplus
 }
 #endif 

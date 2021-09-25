@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../include/cell.h"
+#include "../include/pbfml.h"
 
 
 void print_cell( cell* c ) {
