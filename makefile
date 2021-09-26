@@ -8,6 +8,7 @@ OBJS=$(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
 
 BINDIR=bin
 BIN=$(BINDIR)/pbfml
+INSTALLDIR=~/.local/bin
 
 all:$(BIN)
 
@@ -23,6 +24,9 @@ $(OBJ)/%.o: $(SRC)/%.c $(INCLUDE)/*.h | dirsetup
 
 clean: 
 	$(RM) -r $(BINDIR)/* $(OBJ)/*
+
+install: release
+	cp $(BIN) $(INSTALLDIR)
 
 dirsetup: 
 	mkdir -p $(BINDIR) $(OBJ) 
