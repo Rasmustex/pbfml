@@ -1,6 +1,6 @@
 # TODO
 These are in no particular order:
-- More options, including help menu.
+- More options.
 - Example programs.
 - Detailed BFML writer's guide.
 - Installation guide.
