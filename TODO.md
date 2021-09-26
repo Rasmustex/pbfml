@@ -1,7 +1,7 @@
 # TODO
 These are in no particular order:
 - More options, including help menu.
-- Example programs, such as rainbow "hello, world".
+- Example programs.
 - Detailed BFML writer's guide.
 - Installation guide.
 - Infinite tape size.
