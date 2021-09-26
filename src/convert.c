@@ -19,16 +19,51 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
     unsigned int font_size = 0;
     unsigned int prev_font_size = 0;
 
-    fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"utf-8\">\n</head>\n<body>\n<p>\n", fname );
+    fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"utf-8\">\n</head>\n<body>\n<p style=\"white-space: pre\">", fname );
     for( int i = 0; i < f->textlen; i++ ) {
         same_colors = true;
         currcell = c + i;
 
         // go through each cell and print required tags - keep track of whether the previous cell had the same tags
         // so we can avoid wasting file space
+
+        /* 
+         * font size
+         */
+        font_size = ((currcell->upper & 0b00000001)<<7);
+        font_size +=((currcell->lower>>25) & 0b01111111);
+
+        if( font_size != prev_font_size ) {
+            if( prev_font_size )
+                fprintf(ht, "</span>");
+            if( font_size )
+                fprintf( ht, "<span style=\"font-size: %dpt\">", font_size );
+        }
+
+        /*
+         * colors
+         */
+
+        // get colors, b, g and r. 
+        for( int i = 0; i < 3; i++ ) {
+            if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i]) {
+                same_colors = false;
+            }
+        }
+        // printf("%d, %d, %d\n", colors[2], colors[1], colors[0]);
+        print_cell(currcell);
+        // set colors in new span if they are not the same as in prev
+        if( !same_colors ) {
+            if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
+                fprintf( ht, "</span>" );
+            if( colors[0] + colors[1] + colors[2] ) 
+                fprintf( ht, "<span style=\"color: rgb(%d, %d, %d)\">", colors[2], colors[1], colors[0]);
+        }
+
         /*
          * checking state
          */
+
         // bold 
         
         if( (currcell->upper & TEXT_BOLD) ) {
@@ -51,46 +86,18 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
         } else if( prevcell->upper & TEXT_UNDERLINE )
             fprintf( ht, "</u>");
 
-        /* 
-         * font size
-         */
-        font_size = ((currcell->upper & 0b00000001)<<7);
-        font_size +=((currcell->lower>>25) & 0b01111111);
-
-        if( font_size != prev_font_size ) {
-            if( prev_font_size )
-                fprintf(ht, "</span>");
-            if( font_size )
-                fprintf( ht, "<span style=\"font-size: %dpt\">", font_size );
-        }
-
-        //[0][0][0][00000000]0[00000000][00000000][00000000]
-
-        // get colors, b, g and r. 
-        for( int i = 0; i < 3; i++ ) {
-            if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i]) {
-                same_colors = false;
-            }
-        }
-        // printf("%d, %d, %d\n", colors[2], colors[1], colors[0]);
-        print_cell(currcell);
-        // set colors in new span if they are not the same as in prev
-        if( !same_colors ) {
-            if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
-                fprintf( ht, "</span>" );
-            if( colors[0] + colors[1] + colors[2] ) 
-                fprintf( ht, "<span style=\"color: rgb(%d, %d, %d)\">", colors[2], colors[1], colors[0]);
-        }
-
         // print the character or line break
-        if( *(f->text + i) == '\n' )
-            fprintf( ht, "<br>\n" );
-        else if( *(f->text + i ) == '<' )
+        switch ( *(f->text + i)) {
+        case '<':
             fprintf( ht, "&lt;" );
-        else if( *(f->text + i) == '>' )
+            break;
+        case '>':
             fprintf( ht, "&gt;");
-        else
+            break;         
+        default:
             fprintf( ht, "%c", *(f->text + i) );
+            break;
+        }
 
         prevcell = currcell;
         for( int i = 0; i < 3; i++ )
