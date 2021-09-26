@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include "../include/pbfml.h"
 
-
-// use spans for font size change 
 void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
     cell tempcell = {.lower = 0,
@@ -51,7 +49,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             }
         }
         // printf("%d, %d, %d\n", colors[2], colors[1], colors[0]);
-        print_cell(currcell);
+        // print_cell(currcell);
         // set colors in new span if they are not the same as in prev
         if( !same_colors ) {
             if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
@@ -86,7 +84,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
         } else if( prevcell->upper & TEXT_UNDERLINE )
             fprintf( ht, "</u>");
 
-        // print the character or line break
+        // print the character 
         switch ( *(f->text + i)) {
         case '<':
             fprintf( ht, "&lt;" );

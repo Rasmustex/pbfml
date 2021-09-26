@@ -40,7 +40,8 @@ unsigned long get_repetitions( int start, char* program ) {
 
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
-	cell* tape = (cell*)malloc( f->textlen * sizeof(cell) );
+	cell* tape = (cell*)malloc( 2 * f->textlen * sizeof(cell) );
+	
 	for( unsigned int i = 0; i < f->textlen; i++ ) {
 		(tape + i)->lower=0; 
 		(tape + i)->upper=0; 
@@ -80,9 +81,8 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (++i));
 						}
 						else {
-							free( tape );
-							printf("bracket error");
-							exit(1);
+							void* ptrs[] = {(void*)tape, (void*)f->text, (void*)f->program, (void*)f};
+							print_error("bracket mismatch: too many [", BRACKET_MISMATCH_ERROR, ptrs, 4);
 						}
 						if( currchar == '[' )
 							neededopposites++;
@@ -99,9 +99,8 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (--i));
 						}
 						else {
-							free( tape ); 
-							printf("bracket error");
-							exit(1);
+							void* ptrs[] = {(void*)tape, (void*)f->text, (void*)f->program, (void*)f};
+							print_error("bracket mismatch: too many ]", BRACKET_MISMATCH_ERROR, ptrs, 4);
 						}
 						if( currchar == ']' )
 							neededopposites++;

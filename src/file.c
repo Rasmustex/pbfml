@@ -11,9 +11,8 @@ bfmlFile* read_file( char* filename ) {
     if(!access( filename, F_OK )) {
         f = fopen( filename, "r" );
     } else {
-        free( file );
-        printf("File reading error");
-        exit(-1);
+        void* ptrs[] = {(void*)file};
+        print_error( "Could not open file", FILE_ERROR, ptrs, 1 );
     }
 
     unsigned long charcounter = 0;
@@ -36,6 +35,11 @@ bfmlFile* read_file( char* filename ) {
     fclose(f);
     file->proglen = strlen(file->program);
     file->textlen = strlen(file->text);
+
+    if( !file->textlen ) {
+        void* ptrs[] = {(void*)file->program, (void*)file->textlen, (void*)file};
+        print_error( "No text to mark up (remember, first line is read as a brainfuck program, and won't be counted as text)", FILE_ERROR, ptrs, 3 );
+    }
 
     return file; 
 }

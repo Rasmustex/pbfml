@@ -1,23 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
 #include "../include/pbfml.h"
 
 int main( int argc, char** argv ) {
-    bfmlFile* f = read_file( "test.bfml" );
-    if( !f->proglen ) {
-		printf("Error: no program on 1st line");
-        if( f->textlen )
-            free( f->text );
-	} else if( !f->textlen ) {
-        printf("Error: no text to be marked up");
-        free( f->program );
-    } else {
-    cell* c =run_bf( f );
-    to_html( c, f, "test.html");
-    free( c );
-    free( f->program );
-    free( f->text );
+
+    if( argc <  2 ) {
+        void* ptrs[] = {NULL};
+        print_error( "Invalid number of arguments", ARGUMENT_ERROR, ptrs, 0 );
     }
-    free( f );
+    char* inname = argv[1];
+    char* outname;
+    int option;
+    int oflag = 0; 
+
+    while( ( option = getopt(argc, argv, "o:" ) ) != -1 ) {
+        switch ( option ) {
+            case 'o':
+                outname = optarg;
+                oflag++;
+                break;
+            default:
+                break;
+        }
+    }
+    if( !oflag )
+        outname = "out.html";
+
+    /*
+     * Run and convert input file 
+     */    
+
+    bfmlFile* f = read_file( inname );
+    cell* c =run_bf( f );
+    to_html( c, f, outname);
+    void* ptrs[] = {(void*)c, (void*)f->program, (void*)f->text, (void*)f};
+    cleanup( ptrs, 4 );
     return 0;
 }
