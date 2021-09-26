@@ -54,6 +54,8 @@ void add_cell( cell* c, unsigned long num ) {
     }
     c->lower = (c_rep & 0xFFFFFFFF);
     c->upper = (c_rep>>32);
+
+    return;
 }
 
 void subtract_cell( cell* c, unsigned long num ) {
@@ -73,6 +75,8 @@ void subtract_cell( cell* c, unsigned long num ) {
 
     c->lower = (c_rep & 0xFFFFFFFF);
     c->upper = (c_rep>>32);
+
+    return;
 }
 
 bool compare_cells( cell* c1, cell* c2 ) {
