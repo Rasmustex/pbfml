@@ -11,8 +11,7 @@ extern "C" {
      */
 
     // cell declaration
-    typedef struct
-    {
+    typedef struct {
         unsigned int lower;
         unsigned char upper;
     } cell;
@@ -31,8 +30,7 @@ extern "C" {
      */
 
     // BFML file declaration. Contains program and text to be marked up as well as lengths
-    typedef struct 
-    {
+    typedef struct {
         char* program ;
         char* text;
         unsigned long proglen;
@@ -65,7 +63,7 @@ extern "C" {
         FILE_ERROR = 1,
         ARGUMENT_ERROR = 2,
         BRACKET_MISMATCH_ERROR = 3,
-        ALLOCATION_ERROR
+        ALLOCATION_ERROR = 4
     };
 
     // Prints error, frees memory taken by the given pointers, and exits

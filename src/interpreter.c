@@ -59,7 +59,7 @@ cell* run_bf( bfmlFile* f ) {
 				reps = get_repetitions( i, f->program );
 				add_cell( ptr, reps );
 				break;
-			case '-': // subtract everything at once instead of loop-decrement
+			case '-': 
 				reps = get_repetitions( i, f->program );
 				subtract_cell( ptr, reps );
 				break;
