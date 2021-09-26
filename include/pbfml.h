@@ -19,6 +19,7 @@ extern "C" {
     // long comparecells( cell* c1, cell* c2 ); implement one that returns diff. Currently irrelevant 
     bool compare_cells( cell* c1, cell* c2 );
     void add_cell( cell* c, unsigned long num );
+    void subtract_cell( cell* c, unsigned long num );
 
     // file reading
     typedef struct 

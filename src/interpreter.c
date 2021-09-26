@@ -19,17 +19,17 @@ unsigned long extract_long ( int start, int offset, char* program ) {
 
 unsigned long get_repetitions( int start, char* program ) {
 	int offset = 1;
-	char currchar = *(program + start + offset);
+	char currchar = *(program + start + offset); // get character after found character
 	bool num_ended;
 	unsigned long num;
 
 	if( currchar >= '0' && currchar <= '9' ) { // character is a number
 		num_ended = false;
-		while( !num_ended ) {
-			currchar = *(program + start + (++offset));
+		while( !num_ended ) { 
+			currchar = *(program + start + (++offset)); // check next char
 			if( currchar < '0' || currchar > '9' ) { // no longer a number
 				num_ended = true;
-				num = extract_long( start, offset, program );
+				num = extract_long( start, offset, program ); // extract the entire number
 			}
 		}
 	} else {
@@ -38,7 +38,6 @@ unsigned long get_repetitions( int start, char* program ) {
 	return num;
 }
 
-// TODO: Filelength for EOF checking 
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
 	cell* tape = (cell*)malloc( f->textlen * sizeof(cell) );
@@ -54,16 +53,14 @@ cell* run_bf( bfmlFile* f ) {
 
 	for( int i = 0; i < f->proglen; i++ ) {
 		currchar = *(f->program + i);
-		// Let's add the entire amount at once instead of decrementing in a loop
 		switch( currchar ) {
 			case '+':
 				reps = get_repetitions( i, f->program );
 				add_cell( ptr, reps );
 				break;
-			case '-':
+			case '-': // subtract everything at once instead of loop-decrement
 				reps = get_repetitions( i, f->program );
-				for( unsigned long j = 0; j < reps; j++ )
-					decrement_cell(ptr);
+				subtract_cell( ptr, reps );
 				break;
 			case '>':
 				reps = get_repetitions( i, f->program );

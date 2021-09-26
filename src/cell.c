@@ -56,6 +56,24 @@ void add_cell( cell* c, unsigned long num ) {
     c->upper = (c_rep>>32);
 }
 
+void subtract_cell( cell* c, unsigned long num ) {
+    unsigned long c_rep = (unsigned long)c->upper;
+    c_rep = c_rep<<32;
+    c_rep += (unsigned long)c->lower;
+    unsigned long max = (unsigned long)__UINT32_MAX__ + ((unsigned long)15<<32);
+
+    if( num > c_rep ) {
+        num -= c_rep;
+        if( num > max ) 
+            num -= max;
+
+        c_rep = max - (num - 1);
+    } else 
+        c_rep -= num;
+
+    c->lower = (c_rep & 0xFFFFFFFF);
+    c->upper = (c_rep>>32);
+}
 
 bool compare_cells( cell* c1, cell* c2 ) {
     if( c1->upper == c2->upper && c1->lower == c2->lower )
