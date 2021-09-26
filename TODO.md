@@ -1,6 +1,6 @@
 # TODO
 These are in no particular order:
-- More options.
+- More options, like opening result directly in web browser.
 - Example programs.
 - Detailed BFML writer's guide.
 - Installation guide.
