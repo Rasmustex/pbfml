@@ -49,13 +49,15 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
         } else if( prevcell->upper & TEXT_UNDERLINE )
             fprintf( ht, "</u>");
 
-        // get colors, b, g and r. This implementation does not work, somehow
+        // get colors, b, g and r. 
         for( int i = 0; i < 3; i++ ) {
             if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i]) {
                 same_colors = false;
             }
         }
+        // printf("%d, %d, %d\n", colors[2], colors[1], colors[0]);
         print_cell(currcell);
+        // set colors in new span if they are not the same as in prev
         if( !same_colors ) {
             if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
                 fprintf( ht, "</span>" );
