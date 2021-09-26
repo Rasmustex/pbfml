@@ -72,6 +72,8 @@ extern "C" {
     void print_error( const char* error, int error_code, void** ptrs, int ptrc );
     // Frees the memory taken by the given pointers
     void cleanup( void** ptrs, int ptrc );
+    // Prints the help menu
+    void print_help();
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,7 @@
 int main( int argc, char** argv ) {
 
     if( argc <  2 ) {
+        print_help();
         void* ptrs[] = {NULL};
         print_error( "Invalid number of arguments", ARGUMENT_ERROR, ptrs, 0 );
     }
@@ -14,12 +15,15 @@ int main( int argc, char** argv ) {
     int option;
     int oflag = 0; 
 
-    while( ( option = getopt(argc, argv, "o:" ) ) != -1 ) {
+    while( ( option = getopt(argc, argv, "o:h" ) ) != -1 ) {
         switch ( option ) {
             case 'o':
                 outname = optarg;
                 oflag++;
                 break;
+            case 'h':
+                print_help();
+                exit(0);
             default:
                 break;
         }
