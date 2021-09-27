@@ -34,3 +34,6 @@ Options:
 Currently, pbfml is only tested on linux, but will probably work fine on MacOS.
 
 There currently aren't any distributed binaries of pbfml, but you can build it from this github repo quite easily. For instructions on how to do so, see [building pbfml.](https://github.com/Rasmustex/pbfml/blob/main/BUILD.md)
+
+## License
+Pbfml is released under the [GNU GPLv3.](https://github.com/Rasmustex/pbfml/blob/main/LICENSE)
