@@ -66,12 +66,12 @@ cell* run_bf( bfmlFile* f ) {
 			case '>':
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ )
-					ptr < tape + f->textlen - 1 ? (ptr++) : (ptr = tape);
+					ptr < tape + 2 * f->textlen - 1 ? (ptr++) : (ptr = tape);
 				break;
 			case '<':
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ )
-					ptr > tape ? (ptr--) : (ptr = tape + f->textlen - 1);
+					ptr > tape ? (ptr--) : (ptr = tape + 2 * f->textlen - 1);
 				break;
 			case '[':
 				if( !(ptr->lower || ptr->upper) ) {

@@ -33,7 +33,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
         if( font_size != prev_font_size ) {
             if( prev_font_size )
-                fprintf(ht, "</span>");
+                fprintf( ht, "</span>" );
             if( font_size )
                 fprintf( ht, "<span style=\"font-size: %dpt\">", font_size );
         }
@@ -44,7 +44,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
         // get colors, b, g and r. 
         for( int i = 0; i < 3; i++ ) {
-            if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i]) {
+            if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i] ) {
                 same_colors = false;
             }
         }
@@ -55,7 +55,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
                 fprintf( ht, "</span>" );
             if( colors[0] + colors[1] + colors[2] ) 
-                fprintf( ht, "<span style=\"color: rgb(%d, %d, %d)\">", colors[2], colors[1], colors[0]);
+                fprintf( ht, "<span style=\"color: rgb(%d, %d, %d)\">", colors[2], colors[1], colors[0] );
         }
 
         /*
@@ -102,6 +102,22 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             prev_colors[i] = colors[i];
         prev_font_size = font_size;
     }
+    // closing off any potentially open tags
+    if( prev_font_size )
+        fprintf( ht, "</span>" );
+    
+    if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
+        fprintf( ht, "</span>" );
+
+    if( prevcell->upper & TEXT_BOLD)
+        fprintf( ht, "</b>");
+
+    if( prevcell->upper & TEXT_ITALICS )
+        fprintf( ht, "</em>");
+    
+    if( prevcell->upper & TEXT_UNDERLINE )
+        fprintf( ht, "</u>");
+    
     fprintf( ht, "</p>\n</body>\n</html>\n" );
     fclose( ht );
 }

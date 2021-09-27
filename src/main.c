@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <assert.h>
 #include "../include/pbfml.h"
 
 int main( int argc, char** argv ) {
+
+    assert(sizeof(char) == 1);
+    assert(sizeof(unsigned int) == 4);
+    assert(sizeof(unsigned long) == 8);
 
     if( argc <  2 ) {
         print_help();
@@ -15,7 +20,7 @@ int main( int argc, char** argv ) {
     int option;
     int oflag = 0; 
 
-    while( ( option = getopt(argc, argv, "o:h" ) ) != -1 ) {
+    while( ( option = getopt( argc, argv, "o:h" ) ) != -1 ) {
         switch ( option ) {
             case 'o':
                 outname = optarg;
@@ -37,7 +42,7 @@ int main( int argc, char** argv ) {
 
     bfmlFile* f = read_file( inname );
     cell* c =run_bf( f );
-    to_html( c, f, outname);
+    to_html( c, f, outname );
     void* ptrs[] = {(void*)c, (void*)f->program, (void*)f->text, (void*)f};
     cleanup( ptrs, 4 );
     return 0;
