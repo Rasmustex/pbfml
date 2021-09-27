@@ -1,8 +1,6 @@
 # pbfml
 Brainfuck Markup Language to HTML transpiler.
-
-A markdown mode is planned for the future. 
 ## What is BFML?
-[Here is a link explaining the basics of BFML](https://esolangs.org/wiki/Brainfuck_Markup_Language)
+BFML is a markup language based on BrainFuck.
 
-A wiki/detailed guide will be added to this repo shortly
+To understand how BFML works, [have a look at the wiki](https://github.com/Rasmustex/pbfml/wiki/BFML)
