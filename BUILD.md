@@ -1,7 +1,7 @@
 # Building pbfml
 ## Prerequisites
 ### Installing git 
-To build pbf, you first need the source code. You can get it by cloning this repo using `git`. This does require you to have git, which isn't installed by default on all linux distributions. You can get it from your distribution's repository:
+To build pbfml, you first need the source code. You can get it by cloning this repo using `git`. This does require you to have git, which isn't installed by default on all linux distributions. You can get it from your distribution's repository:
 #### Debian/Ubuntu
 ```
 # apt install git
