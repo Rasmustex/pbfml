@@ -10,26 +10,25 @@ extern "C" {
      * Cells
      */
 
-    // cell declaration
+    /* 
+     * Cell declaration. The brainfuck tape is made of these.
+     * Lower holds the 32 least significant bits of the cell, and upper holds the 4 most significant ones, making for a 36-bit cell.
+     * Upper is really 8 bits but capped by functions.
+     */
     typedef struct {
         unsigned int lower;
         unsigned char upper;
     } cell;
 
-    // cell functions
-    void print_cell( cell* c );
-    void increment_cell( cell* c );
-    void decrement_cell( cell* c );
-    // long comparecells( cell* c1, cell* c2 ); implement one that returns diff. Currently irrelevant 
-    bool compare_cells( cell* c1, cell* c2 );
-    void add_cell( cell* c, unsigned long num );
-    void subtract_cell( cell* c, unsigned long num );
+    void print_cell( cell* c ); // Prints the values of upper and lower in hex. Upper and lower values are separated by a space.
+    void add_cell( cell* c, unsigned long num ); // Add num to the cell's value with wraparound.
+    void subtract_cell( cell* c, unsigned long num ); // Subtract num from the cell's value with wraparound.
 
     /* 
      * File handling
      */
 
-    // BFML file declaration. Contains program and text to be marked up as well as lengths
+    // BFML file declaration. Contains program and text to be marked up as well as lengths of program and text.
     typedef struct {
         char* program ;
         char* text;
@@ -37,22 +36,22 @@ extern "C" {
         unsigned long textlen;
     } bfmlFile;
 
-    // reads file with name filename and outputs a BFML file
+    // Reads file with name filename and outputs a BFML file
     bfmlFile* read_file( char* filename );
 
-    // interpret program 
+    // Interprets the BF program on the first line of the BFML file, and return the resulting tape.
     cell* run_bf( bfmlFile* f );
 
     /*
      * html conversion 
      */ 
 
-    // for bitwise and with the upper bytes of the char 
+    // Representes the bits that need to be set in the cell's upper data in order for certain attributes to be true.
     #define TEXT_BOLD 8
     #define TEXT_ITALICS 4
     #define TEXT_UNDERLINE 2
 
-    // converts a BFML file into an html file using the output of a BF program
+    // converts a BFML file into an HTML file using the output of the interpretation of the BF program on the first line
     void to_html( cell* c, bfmlFile* f, char* fname );
 
     /*

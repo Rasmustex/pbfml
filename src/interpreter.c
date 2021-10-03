@@ -17,6 +17,7 @@ unsigned long extract_long ( int start, int offset, char* program ) {
 	return extracted;
 }
 
+// Get how many times a given instruction in the BF program is supposed to be repeated based on the number after the instruction
 unsigned long get_repetitions( int start, char* program ) {
 	int offset = 1;
 	char currchar = *(program + start + offset); // get character after found character
