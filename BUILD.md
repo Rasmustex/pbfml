@@ -39,7 +39,7 @@ To build pbfml once you are in the `pbfml` directory, run the command:
 ```
 $ make release
 ```
-The binary will be in `bin/pbf`
+The binary will be in `bin/pbfml`
 ## Installation
 You can install pbf to `~/.local/bin` with the command:
 ```
