@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <assert.h>
 #include "../include/pbfml.h"
 
 /* 
@@ -10,6 +11,7 @@
  */
 unsigned long extract_long ( int start, int offset, char* program ) {
 	char* selection = malloc((offset) * sizeof(char)); // allocate a string with size of the int
+	assert( selection != NULL );
 	memcpy(selection, &program[start + 1], offset - 1); // copy program at int into string
 	*(selection + offset - 1) = '\0';
 	unsigned long extracted = (unsigned long)atol(selection); // convert to long 
@@ -42,6 +44,7 @@ unsigned long get_repetitions( int start, char* program ) {
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
 	cell* tape = (cell*)malloc( 2 * f->textlen * sizeof(cell) );
+	assert( tape != NULL );
 	
 	for( unsigned int i = 0; i < f->textlen; i++ ) {
 		(tape + i)->lower=0; 

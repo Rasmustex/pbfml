@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -6,6 +7,7 @@
 
 bfmlFile* read_file( char* filename ) {
     bfmlFile* file = (bfmlFile*)malloc(sizeof(bfmlFile));
+    assert( file != NULL );
     FILE* f;
 
     if(!access( filename, F_OK )) {
@@ -20,6 +22,7 @@ bfmlFile* read_file( char* filename ) {
         charcounter++;
     }
     file->program = (char*)malloc(charcounter + 1);
+    assert( file->program != NULL );
     fseek(f, 0, SEEK_SET);
     fgets(file->program, charcounter + 1, f);
     file->program[charcounter] = '\0';
@@ -28,6 +31,7 @@ bfmlFile* read_file( char* filename ) {
     unsigned long textsize = ftell(f) - charcounter - 1;
     fseek(f, charcounter + 1, SEEK_SET);
     file->text = (char*)malloc(textsize + 1);
+    assert( file->text != NULL );
     for( int i = 0; i < textsize; i++ ) {
         file->text[i] = fgetc( f );
     }
