@@ -72,26 +72,24 @@ cell* run_bf( bfmlFile* f ) {
 			case '>':
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ ) {
-					// ptr < tape + 2 * f->textlen - 1 ? (ptr++) : (ptr = tape);
 					if( !ptr->next ) {
 						ptr->next = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->next, ptr, NULL );
-						ptr->is_in_text = false;
 					}
 					ptr = ptr->next;
+					ptr->is_in_text = false;
 					assert( ptr );
 				}
 				break;
 			case '<':
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ ) {
-					// ptr > tape ? (ptr--) : (ptr = tape + 2 * f->textlen - 1);
 					if( !ptr->prev ) {
 						ptr->prev = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->prev, NULL, ptr );
-						ptr->is_in_text = false;
 					}
 					ptr = ptr->prev; 
+					ptr->is_in_text = false;
 					assert( ptr );
 				}
 				break;
