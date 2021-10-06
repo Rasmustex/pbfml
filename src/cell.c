@@ -72,15 +72,8 @@ void free_cells( cell* c, bfmlFile* f ) {
     int i = 0;
     while( c != NULL ) { // the first part of the tape is a real big block, so we need to make sure that that is only freed once
         next = c->next;
-        if( freeflag )
-            free( c );
-        
-        if( i < 2 * f->textlen - 1 )
-            freeflag = false; 
-        else
-            freeflag = true;
-        c = next; 
-        i++;
+        free( c );
+        c = next;
     }
 
     return;

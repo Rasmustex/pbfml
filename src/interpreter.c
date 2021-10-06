@@ -43,15 +43,11 @@ unsigned long get_repetitions( int start, char* program ) {
 
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
-	cell* tape = (cell*)malloc( 2 * f->textlen * sizeof(cell) );
+	cell* tape = (cell*)malloc( sizeof(cell) );
 	assert( tape );
-	initialise_cell( tape, NULL, tape + 1 );
+	initialise_cell( tape, NULL, NULL );
 	tape->is_in_text = true;
-	for( unsigned int i = 1; i < f->textlen * 2; i++ ) {
-		initialise_cell( tape + i, tape + i - 1, tape + i + 1 ); 
-		(tape + i)->is_in_text = i < f->textlen ? true : false;
-	}
-	(tape + 2 * f->textlen - 1)->next = NULL;
+	unsigned long tail_added_cells = 0;
 
 	char currchar;
 	cell* ptr = tape; 
@@ -75,10 +71,11 @@ cell* run_bf( bfmlFile* f ) {
 					if( !ptr->next ) {
 						ptr->next = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->next, ptr, NULL );
+						tail_added_cells++;
+						ptr->next->is_in_text = tail_added_cells < f->textlen - 1 ? true : false;
+						assert( ptr->next );
 					}
 					ptr = ptr->next;
-					assert( ptr );
-					ptr->is_in_text = false;
 				}
 				break;
 			case '<':
@@ -87,10 +84,10 @@ cell* run_bf( bfmlFile* f ) {
 					if( !ptr->prev ) {
 						ptr->prev = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->prev, NULL, ptr );
+						assert( ptr->next );
+						ptr->next->is_in_text = false;
 					}
 					ptr = ptr->prev; 
-					assert( ptr );
-					ptr->is_in_text = false;
 				}
 				break;
 			case '[':
