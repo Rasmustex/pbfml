@@ -41,9 +41,10 @@ int main( int argc, char** argv ) {
      */    
 
     bfmlFile* f = read_file( inname );
-    cell* c =run_bf( f );
+    cell* c = run_bf( f );
     to_html( c, f, outname );
-    void* ptrs[] = {(void*)c, (void*)f->program, (void*)f->text, (void*)f};
-    cleanup( ptrs, 4 );
+    free_cells( c, f );
+    void* ptrs[] = {(void*)f->program, (void*)f->text, (void*)f};
+    cleanup( ptrs, 3 );
     return 0;
 }

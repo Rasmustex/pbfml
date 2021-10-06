@@ -6,21 +6,26 @@
 
 void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
-    cell tempcell = {.lower = 0,
-                    .upper = 0};
-    cell* currcell;
-    cell* prevcell = &tempcell;
+    cell tempcell = {
+        .next = c,
+        .is_in_text = false,
+        .lower = 0,
+        .upper = 0
+    };
+
+    cell* prev = &tempcell;
+
     FILE* ht = fopen( fname, "w+" );
     unsigned int colors[] = {0, 0, 0};
     unsigned int prev_colors[] = {0, 0, 0};
     bool same_colors;
     unsigned int font_size = 0;
     unsigned int prev_font_size = 0;
+    unsigned long i = 0;
 
     fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"utf-8\">\n</head>\n<body>\n<p style=\"white-space: pre\">", fname );
-    for( int i = 0; i < f->textlen; i++ ) {
+    while( c->is_in_text ) {
         same_colors = true;
-        currcell = c + i;
 
         // go through each cell and print required tags - keep track of whether the previous cell had the same tags
         // so we can avoid wasting file space
@@ -28,8 +33,8 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
         /* 
          * font size
          */
-        font_size = ((currcell->upper & 0b00000001)<<7);
-        font_size +=((currcell->lower>>25) & 0b01111111);
+        font_size = ((c->upper & 0b00000001)<<7);
+        font_size += ((c->lower>>25) & 0b01111111);
 
         if( font_size != prev_font_size ) {
             if( prev_font_size )
@@ -44,7 +49,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
         // get colors, b, g and r. 
         for( int i = 0; i < 3; i++ ) {
-            if( (colors[i] = ((currcell->lower>>(i * 8)) & 0xFF)) != prev_colors[i] ) {
+            if( (colors[i] = ((c->lower>>(i * 8)) & 0xFF)) != prev_colors[i] ) {
                 same_colors = false;
             }
         }
@@ -62,24 +67,24 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
         // bold 
         
-        if( (currcell->upper & TEXT_BOLD) ) {
-            if( !(prevcell->upper & TEXT_BOLD) )
+        if( (c->upper & TEXT_BOLD) ) {
+            if( !(prev->upper & TEXT_BOLD) )
                 fprintf( ht, "<b>" );
-        } else if( prevcell->upper & TEXT_BOLD )
+        } else if( prev->upper & TEXT_BOLD )
             fprintf( ht, "</b>");
 
         //italics
-        if( (currcell->upper & TEXT_ITALICS) ) {
-            if( !(prevcell->upper & TEXT_ITALICS) )
+        if( (c->upper & TEXT_ITALICS) ) {
+            if( !(prev->upper & TEXT_ITALICS) )
                 fprintf( ht, "<em>" );
-        } else if( prevcell->upper & TEXT_ITALICS )
+        } else if( prev->upper & TEXT_ITALICS )
             fprintf( ht, "</em>");
 
         // underline 
-        if( (currcell->upper & TEXT_UNDERLINE) ) {
-            if( !(prevcell->upper & TEXT_UNDERLINE) )
+        if( (c->upper & TEXT_UNDERLINE) ) {
+            if( !(c->upper & TEXT_UNDERLINE) )
                 fprintf( ht, "<u>" );
-        } else if( prevcell->upper & TEXT_UNDERLINE )
+        } else if( prev->upper & TEXT_UNDERLINE )
             fprintf( ht, "</u>");
 
         // print the character 
@@ -95,10 +100,12 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
             break;
         }
 
-        prevcell = currcell;
+        prev = c;
+        c = c->next;
         for( int i = 0; i < 3; i++ )
             prev_colors[i] = colors[i];
         prev_font_size = font_size;
+        i++;
     }
     // closing off any potentially open tags
     if( prev_font_size )
@@ -107,13 +114,13 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
     if( prev_colors[0] + prev_colors[1] + prev_colors[2] )
         fprintf( ht, "</span>" );
 
-    if( prevcell->upper & TEXT_BOLD)
+    if( c->upper & TEXT_BOLD)
         fprintf( ht, "</b>");
 
-    if( prevcell->upper & TEXT_ITALICS )
+    if( c->upper & TEXT_ITALICS )
         fprintf( ht, "</em>");
     
-    if( prevcell->upper & TEXT_UNDERLINE )
+    if( c->upper & TEXT_UNDERLINE )
         fprintf( ht, "</u>");
     
     fprintf( ht, "</p>\n</body>\n</html>\n" );
