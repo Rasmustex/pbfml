@@ -77,8 +77,8 @@ cell* run_bf( bfmlFile* f ) {
 						initialise_cell( ptr->next, ptr, NULL );
 					}
 					ptr = ptr->next;
-					ptr->is_in_text = false;
 					assert( ptr );
+					ptr->is_in_text = false;
 				}
 				break;
 			case '<':
@@ -89,8 +89,8 @@ cell* run_bf( bfmlFile* f ) {
 						initialise_cell( ptr->prev, NULL, ptr );
 					}
 					ptr = ptr->prev; 
-					ptr->is_in_text = false;
 					assert( ptr );
+					ptr->is_in_text = false;
 				}
 				break;
 			case '[':
