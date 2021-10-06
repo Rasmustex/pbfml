@@ -46,7 +46,7 @@ cell* run_bf( bfmlFile* f ) {
 	cell* tape = (cell*)malloc( 2 * f->textlen * sizeof(cell) );
 	assert( tape != NULL );
 	
-	for( unsigned int i = 0; i < f->textlen; i++ ) {
+	for( unsigned int i = 0; i < 2 * f->textlen; i++ ) {
 		(tape + i)->lower=0; 
 		(tape + i)->upper=0; 
 	}
