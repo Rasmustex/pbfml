@@ -49,3 +49,39 @@ void subtract_cell( cell* c, unsigned long num ) {
 
     return;
 }
+
+cell* find_head( cell* c ) {
+    while( c->prev != NULL ) {
+        c = c->prev;
+    }
+    
+    return c;
+}
+
+void initialise_cell( cell* c, cell* prev, cell* next ) {
+    c->prev = prev;
+    c->next = next;
+    c->upper = 0;
+    c->lower = 0;
+}
+
+void free_cells( cell* c, bfmlFile* f ) {
+    c = find_head( c );
+    cell* next;
+    bool freeflag = true;
+    int i = 0;
+    while( c != NULL ) { // the first part of the tape is a real big block, so we need to make sure that that is only freed once
+        next = c->next;
+        if( freeflag )
+            free( c );
+        
+        if( i < 2 * f->textlen - 1 )
+            freeflag = false; 
+        else
+            freeflag = true;
+        c = next; 
+        i++;
+    }
+
+    return;
+}

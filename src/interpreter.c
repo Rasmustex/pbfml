@@ -11,7 +11,7 @@
  */
 unsigned long extract_long ( int start, int offset, char* program ) {
 	char* selection = malloc((offset) * sizeof(char)); // allocate a string with size of the int
-	assert( selection != NULL );
+	assert( selection );
 	memcpy(selection, &program[start + 1], offset - 1); // copy program at int into string
 	*(selection + offset - 1) = '\0';
 	unsigned long extracted = (unsigned long)atol(selection); // convert to long 
@@ -44,12 +44,14 @@ unsigned long get_repetitions( int start, char* program ) {
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
 	cell* tape = (cell*)malloc( 2 * f->textlen * sizeof(cell) );
-	assert( tape != NULL );
-	
-	for( unsigned int i = 0; i < 2 * f->textlen; i++ ) {
-		(tape + i)->lower=0; 
-		(tape + i)->upper=0; 
+	assert( tape );
+	initialise_cell( tape, NULL, tape + 1 );
+	tape->is_in_text = true;
+	for( unsigned int i = 1; i < f->textlen * 2; i++ ) {
+		initialise_cell( tape + i, tape + i - 1, tape + i + 1 ); 
+		(tape + i)->is_in_text = i < f->textlen ? true : false;
 	}
+	(tape + 2 * f->textlen - 1)->next = NULL;
 
 	char currchar;
 	cell* ptr = tape; 
@@ -69,13 +71,29 @@ cell* run_bf( bfmlFile* f ) {
 				break;
 			case '>':
 				reps = get_repetitions( i, f->program );
-				for( unsigned long j = 0; j < reps; j++ )
-					ptr < tape + 2 * f->textlen - 1 ? (ptr++) : (ptr = tape);
+				for( unsigned long j = 0; j < reps; j++ ) {
+					// ptr < tape + 2 * f->textlen - 1 ? (ptr++) : (ptr = tape);
+					if( !ptr->next ) {
+						ptr->next = (cell*)malloc( sizeof(cell) );
+						initialise_cell( ptr->next, ptr, NULL );
+						ptr->is_in_text = false;
+					}
+					ptr = ptr->next;
+					assert( ptr );
+				}
 				break;
 			case '<':
 				reps = get_repetitions( i, f->program );
-				for( unsigned long j = 0; j < reps; j++ )
-					ptr > tape ? (ptr--) : (ptr = tape + 2 * f->textlen - 1);
+				for( unsigned long j = 0; j < reps; j++ ) {
+					// ptr > tape ? (ptr--) : (ptr = tape + 2 * f->textlen - 1);
+					if( !ptr->prev ) {
+						ptr->prev = (cell*)malloc( sizeof(cell) );
+						initialise_cell( ptr->prev, NULL, ptr );
+						ptr->is_in_text = false;
+					}
+					ptr = ptr->prev; 
+					assert( ptr );
+				}
 				break;
 			case '[':
 				if( !(ptr->lower || ptr->upper) ) {
@@ -85,8 +103,9 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (++i));
 						}
 						else {
-							void* ptrs[] = {(void*)tape, (void*)f->text, (void*)f->program, (void*)f};
-							print_error("bracket mismatch: too many [", BRACKET_MISMATCH_ERROR, ptrs, 4);
+							free_cells( tape, f );
+							void* ptrs[] = {(void*)f->text, (void*)f->program, (void*)f};
+							print_error("bracket mismatch: too many [", BRACKET_MISMATCH_ERROR, ptrs, 3);
 						}
 						if( currchar == '[' )
 							neededopposites++;
@@ -103,8 +122,9 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (--i));
 						}
 						else {
-							void* ptrs[] = {(void*)tape, (void*)f->text, (void*)f->program, (void*)f};
-							print_error("bracket mismatch: too many ]", BRACKET_MISMATCH_ERROR, ptrs, 4);
+							free_cells( tape, f );
+							void* ptrs[] = {(void*)f->text, (void*)f->program, (void*)f};
+							print_error("bracket mismatch: too many ]", BRACKET_MISMATCH_ERROR, ptrs, 3);
 						}
 						if( currchar == ']' )
 							neededopposites++;
@@ -115,7 +135,7 @@ cell* run_bf( bfmlFile* f ) {
 				break;
 			case '.':
 				ptr->upper = 0;
-				if( ptr - tape <= f->textlen ) {
+				if( ptr->is_in_text ) {
 					ptr->lower = 0;
 				} else {
 					ptr->lower = 1;

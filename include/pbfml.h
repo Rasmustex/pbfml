@@ -15,14 +15,22 @@ extern "C" {
      * Lower holds the 32 least significant bits of the cell, and upper holds the 4 most significant ones, making for a 36-bit cell.
      * Upper is really 8 bits but capped by functions.
      */
-    typedef struct {
+    typedef struct ce cell;
+    struct ce {
+        cell *prev;
         unsigned int lower;
         unsigned char upper;
-    } cell;
+        bool is_in_text; 
+        cell* next;
+    };
 
     void print_cell( cell* c ); // Prints the values of upper and lower in hex. Upper and lower values are separated by a space.
     void add_cell( cell* c, unsigned long num ); // Add num to the cell's value with wraparound.
     void subtract_cell( cell* c, unsigned long num ); // Subtract num from the cell's value with wraparound.
+    // 0-initializes cell values and makes its prev point to prev and next point to next
+    void initialise_cell( cell* c, cell* prev, cell* next );
+    // find head of cell list
+    cell* find_head( cell* c );
 
     /* 
      * File handling
@@ -35,6 +43,9 @@ extern "C" {
         unsigned long proglen;
         unsigned long textlen;
     } bfmlFile;
+
+    // free all cells in a cell list 
+    void free_cells( cell* c, bfmlFile* f );
 
     // Reads file with name filename and outputs a BFML file
     bfmlFile* read_file( char* filename );
