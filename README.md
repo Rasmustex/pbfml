@@ -3,7 +3,7 @@
 Pbfml is a command line program that converts BFML documents to HTML.
 
 ### What is BFML?
-BFML is a markup language based on BrainFuck with 36-bit unsigned cells.
+BFML is a markup language based on BrainFuck with 36-bit unsigned cells, where the tape (in this implementation) is infinite.
 
 It uses the resulting tape from a brainfuck program on the first line of the file, and applies different markup options to the plain text character that the cell corresponds to, depending on the value of the cell. These options include things like colour, font size and boldness. An example of a BFML program could be:
 
