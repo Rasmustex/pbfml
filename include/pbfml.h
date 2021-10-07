@@ -31,6 +31,7 @@ extern "C" {
     void initialise_cell( cell* c, cell* prev, cell* next );
     // find head of cell list
     cell* find_head( cell* c );
+    cell* find_tail( cell* c );
 
     /* 
      * File handling

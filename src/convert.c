@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "../include/pbfml.h"
 
 void to_html ( cell* c, bfmlFile* f, char* fname ) {
 
     cell tempcell = {
-        .next = c,
+        .next = NULL,
         .is_in_text = false,
         .lower = 0,
         .upper = 0
@@ -24,7 +25,7 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
     unsigned long i = 0;
 
     fprintf( ht, "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<title>%s</title>\n\t<meta charset=\"utf-8\">\n</head>\n<body>\n<p style=\"white-space: pre\">", fname );
-    while( c->is_in_text ) {
+    for( i = 0; i < f->textlen; i++ ) {
         same_colors = true;
 
         // go through each cell and print required tags - keep track of whether the previous cell had the same tags
@@ -101,11 +102,13 @@ void to_html ( cell* c, bfmlFile* f, char* fname ) {
         }
 
         prev = c;
-        c = c->next;
         for( int i = 0; i < 3; i++ )
             prev_colors[i] = colors[i];
         prev_font_size = font_size;
-        i++;
+        if( c->next != NULL )
+            c = c->next;
+        else
+            c = &tempcell;
     }
     // closing off any potentially open tags
     if( prev_font_size )

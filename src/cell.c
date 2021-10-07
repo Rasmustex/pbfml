@@ -58,6 +58,14 @@ cell* find_head( cell* c ) {
     return c;
 }
 
+cell* find_tail( cell* c ) {
+    while( c->next != NULL ) {
+        c = c->next;
+    }
+    
+    return c;
+}
+
 void initialise_cell( cell* c, cell* prev, cell* next ) {
     c->prev = prev;
     c->next = next;
@@ -68,8 +76,6 @@ void initialise_cell( cell* c, cell* prev, cell* next ) {
 void free_cells( cell* c, bfmlFile* f ) {
     c = find_head( c );
     cell* next;
-    bool freeflag = true;
-    int i = 0;
     while( c != NULL ) { // the first part of the tape is a real big block, so we need to make sure that that is only freed once
         next = c->next;
         free( c );
