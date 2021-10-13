@@ -58,14 +58,17 @@ cell* run_bf( bfmlFile* f ) {
 		currchar = *(f->program + i);
 		switch( currchar ) {
 			case '+':
+				// add n to the cell, where n is the number after the +, but is at least 1
 				reps = get_repetitions( i, f->program );
 				add_cell( ptr, reps );
 				break;
 			case '-': 
+				// subtract n from the cell, where n is the number after the +, but is at least 1
 				reps = get_repetitions( i, f->program );
 				subtract_cell( ptr, reps );
 				break;
 			case '>':
+				// move right on the tape n times
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ ) {
 					if( !ptr->next ) {
@@ -79,6 +82,7 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case '<':
+				// move left on the tape n times
 				reps = get_repetitions( i, f->program );
 				for( unsigned long j = 0; j < reps; j++ ) {
 					if( !ptr->prev ) {
@@ -91,6 +95,7 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case '[':
+				// jump to corresponding right bracket if zero
 				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
@@ -110,6 +115,7 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case ']':
+				// jump to corresponding left bracket if not 0
 				if( ptr->lower || ptr->upper ) {
 					neededopposites = 1;
 					while ( neededopposites > 0 ) {
