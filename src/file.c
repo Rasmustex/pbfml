@@ -40,7 +40,7 @@ bfmlFile* read_file( char* filename ) {
     file->proglen = strlen(file->program);
     file->textlen = strlen(file->text);
 
-    if( !file->textlen ) {
+    if( !file->textlen ) { // check if there actually is any text to mark up
         void* ptrs[] = {(void*)file->program, (void*)file->textlen, (void*)file};
         print_error( "No text to mark up (remember, first line is read as a brainfuck program, and won't be counted as text)", FILE_ERROR, ptrs, 3 );
     }

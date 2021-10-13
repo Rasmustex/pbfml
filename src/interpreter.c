@@ -43,16 +43,16 @@ unsigned long get_repetitions( int start, char* program ) {
 
 cell* run_bf( bfmlFile* f ) {
 	// create tape and init to 0.
-	cell* tape = (cell*)malloc( sizeof(cell) );
+	cell* tape = (cell*)malloc( sizeof(cell) ); // first cell in the tape
 	assert( tape );
-	initialise_cell( tape, NULL, NULL );
-	tape->is_in_text = true;
-	unsigned long tail_added_cells = 0;
+	initialise_cell( tape, NULL, NULL ); 
+	tape->is_in_text = true; // The first cell corresponds to text
+	unsigned long tail_added_cells = 0; // Amount of cells added at the tail of the tape 
 
 	char currchar;
-	cell* ptr = tape; 
-	int neededopposites;
-	unsigned long reps;
+	cell* ptr = tape; // pointer that we move around in the tape
+	int neededopposites; // counter to keep track of corresponding brackets
+	unsigned long reps; // amount of repetitions, found by reading eventual numbers after an operation
 
 	for( int i = 0; i < f->proglen; i++ ) {
 		currchar = *(f->program + i);
@@ -95,7 +95,7 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case '[':
-				// jump to corresponding right bracket if zero
+				// jump to corresponding right bracket if zero. Exit with error if no corresponding right bracket
 				if( !(ptr->lower || ptr->upper) ) {
 					neededopposites = 1;
 					while( neededopposites > 0 ) {
@@ -135,6 +135,7 @@ cell* run_bf( bfmlFile* f ) {
 				}
 				break;
 			case '.':
+				// returns 0 to the cell if it corresponds to a character in the text, 1 if not
 				ptr->upper = 0;
 				if( ptr->is_in_text ) {
 					ptr->lower = 0;

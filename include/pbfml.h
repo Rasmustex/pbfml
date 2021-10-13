@@ -24,9 +24,12 @@ extern "C" {
         cell* next;
     };
 
-    void print_cell( cell* c ); // Prints the values of upper and lower in hex. Upper and lower values are separated by a space.
-    void add_cell( cell* c, unsigned long num ); // Add num to the cell's value with wraparound.
-    void subtract_cell( cell* c, unsigned long num ); // Subtract num from the cell's value with wraparound.
+    // Prints the values of upper and lower in hex. Upper and lower values are separated by a space.
+    void print_cell( cell* c ); 
+    // Add num to the cell's value with wraparound.
+    void add_cell( cell* c, unsigned long num ); 
+    // Subtract num from the cell's value with wraparound.
+    void subtract_cell( cell* c, unsigned long num ); 
     // 0-initializes cell values and makes its prev point to prev and next point to next
     void initialise_cell( cell* c, cell* prev, cell* next );
     // find head of cell list
