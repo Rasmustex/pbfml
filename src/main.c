@@ -15,7 +15,6 @@ int main( int argc, char** argv ) {
         void* ptrs[] = {NULL};
         print_error( "Invalid number of arguments", ARGUMENT_ERROR, ptrs, 0 );
     }
-    char* inname = argv[1];
     char* outname;
     int option;
     int oflag = 0; 
@@ -36,6 +35,7 @@ int main( int argc, char** argv ) {
     if( !oflag )
         outname = "out.html";
 
+    char* inname = argv[optind];
     /*
      * Run and convert input file 
      */    

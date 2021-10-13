@@ -72,7 +72,7 @@ cell* run_bf( bfmlFile* f ) {
 						ptr->next = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->next, ptr, NULL );
 						tail_added_cells++;
-						ptr->next->is_in_text = tail_added_cells < f->textlen - 1 ? true : false;
+						ptr->next->is_in_text = tail_added_cells < f->textlen ? true : false;
 						assert( ptr->next );
 					}
 					ptr = ptr->next;
