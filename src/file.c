@@ -17,8 +17,17 @@ bfmlFile* read_file( char* filename ) {
         print_error( "Could not open file", FILE_ERROR, ptrs, 1 );
     }
 
+    fseek( f, 0, SEEK_END );
+    unsigned long filesize = ftell(f);
+    fseek( f, 0, SEEK_SET );
+
     unsigned long charcounter = 0;
     while(fgetc(f) != '\n') {
+        if( charcounter > filesize ) {
+            fclose(f);
+            void* ptrs[] = {(void*) file};
+            print_error( "No text to mark up (remember, first line is read as a brainfuck program, and won't be counted as text)", FILE_ERROR, ptrs, 1 );
+        }
         charcounter++;
     }
     file->program = (char*)malloc(charcounter + 1);
@@ -40,10 +49,6 @@ bfmlFile* read_file( char* filename ) {
     file->proglen = strlen(file->program);
     file->textlen = strlen(file->text);
 
-    if( !file->textlen ) { // check if there actually is any text to mark up
-        void* ptrs[] = {(void*)file->program, (void*)file->textlen, (void*)file};
-        print_error( "No text to mark up (remember, first line is read as a brainfuck program, and won't be counted as text)", FILE_ERROR, ptrs, 3 );
-    }
 
     return file; 
 }
