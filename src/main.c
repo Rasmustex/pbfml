@@ -5,11 +5,6 @@
 #include "../include/pbfml.h"
 
 int main( int argc, char** argv ) {
-
-    assert(sizeof(char) == 1);
-    assert(sizeof(unsigned int) == 4);
-    assert(sizeof(unsigned long) == 8);
-
     if( argc <  2 ) {
         print_help();
         void* ptrs[] = {NULL};
