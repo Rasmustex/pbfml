@@ -49,7 +49,7 @@ extern "C" {
     } bfmlFile;
 
     // free all cells in a cell list 
-    void free_cells( cell* c, bfmlFile* f );
+    void free_cells( cell* c );
 
     // Reads file with name filename and outputs a BFML file
     bfmlFile* read_file( char* filename );

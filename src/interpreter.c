@@ -103,7 +103,7 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (++i));
 						}
 						else {
-							free_cells( tape, f );
+							free_cells( tape );
 							void* ptrs[] = {(void*)f->text, (void*)f->program, (void*)f};
 							print_error("bracket mismatch: too many [", BRACKET_MISMATCH_ERROR, ptrs, 3);
 						}
@@ -123,7 +123,7 @@ cell* run_bf( bfmlFile* f ) {
 							currchar = *(f->program + (--i));
 						}
 						else {
-							free_cells( tape, f );
+							free_cells( tape );
 							void* ptrs[] = {(void*)f->text, (void*)f->program, (void*)f};
 							print_error("bracket mismatch: too many ]", BRACKET_MISMATCH_ERROR, ptrs, 3);
 						}

@@ -73,7 +73,7 @@ void initialise_cell( cell* c, cell* prev, cell* next ) {
     c->lower = 0;
 }
 
-void free_cells( cell* c, bfmlFile* f ) {
+void free_cells( cell* c ) {
     c = find_head( c );
     cell* next;
     while( c != NULL ) { // the first part of the tape is a real big block, so we need to make sure that that is only freed once
