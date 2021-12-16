@@ -73,10 +73,10 @@ cell* run_bf( bfmlFile* f ) {
 				for( unsigned long j = 0; j < reps; j++ ) {
 					if( !ptr->next ) {
 						ptr->next = (cell*)malloc( sizeof(cell) );
+						assert( ptr->next );
 						initialise_cell( ptr->next, ptr, NULL );
 						tail_added_cells++;
 						ptr->next->is_in_text = tail_added_cells < f->textlen ? true : false;
-						assert( ptr->next );
 					}
 					ptr = ptr->next;
 				}
@@ -87,8 +87,8 @@ cell* run_bf( bfmlFile* f ) {
 				for( unsigned long j = 0; j < reps; j++ ) {
 					if( !ptr->prev ) {
 						ptr->prev = (cell*)malloc( sizeof(cell) );
-						initialise_cell( ptr->prev, NULL, ptr );
 						assert( ptr->prev );
+						initialise_cell( ptr->prev, NULL, ptr );
 						ptr->prev->is_in_text = false;
 					}
 					ptr = ptr->prev; 
