@@ -88,8 +88,8 @@ cell* run_bf( bfmlFile* f ) {
 					if( !ptr->prev ) {
 						ptr->prev = (cell*)malloc( sizeof(cell) );
 						initialise_cell( ptr->prev, NULL, ptr );
-						assert( ptr->next );
-						ptr->next->is_in_text = false;
+						assert( ptr->prev );
+						ptr->prev->is_in_text = false;
 					}
 					ptr = ptr->prev; 
 				}

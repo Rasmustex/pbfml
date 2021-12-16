@@ -42,7 +42,7 @@ extern "C" {
 
     // BFML file declaration. Contains program and text to be marked up as well as lengths of program and text.
     typedef struct {
-        char* program ;
+        char* program;
         char* text;
         unsigned long proglen;
         unsigned long textlen;
